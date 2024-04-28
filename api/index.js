@@ -5,6 +5,7 @@ import chalk from 'chalk';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 mongoose.connect(process.env.MONGODB).then(() => {
   console.log(chalk.blue.bgGreen.bold('Connected to MongoDB successfully !!!'));
@@ -16,6 +17,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
