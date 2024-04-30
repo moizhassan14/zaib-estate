@@ -6,6 +6,7 @@ import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import listingRouter from './routes/listing.route.js';
 
 mongoose.connect(process.env.MONGODB).then(() => {
   console.log(chalk.blue.bgGreen.bold('Connected to MongoDB successfully !!!'));
@@ -21,6 +22,7 @@ app.use(cookieParser());
 
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
+app.use('/api/listing', listingRouter);
 
 // Middleware for handling errors
 app.use((err, req, res, next) => {
