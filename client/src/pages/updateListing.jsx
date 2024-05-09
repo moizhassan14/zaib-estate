@@ -138,7 +138,7 @@ export default function UpdateListing() {
         setError(data.message);
         return;
       }
-      navigate(`/listing${data._id}`);
+      navigate(`/listing/${data._id}`);
     } catch (error) {
       setError(error.message);
       setLoading(false);
