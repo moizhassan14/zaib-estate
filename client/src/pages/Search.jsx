@@ -14,6 +14,7 @@ export default function Search() {
   });
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showmore, setShowmore] = useState(false);
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const searchTermFormUrl = urlParams.get("searchTerm");
@@ -44,9 +45,15 @@ export default function Search() {
     }
     const fetchListings = async () => {
       setLoading(true);
+      setShowmore(false);
       const searchQuery = urlParams.toString();
       const res = await fetch(`/api/listing/get?${searchQuery}`);
       const data = await res.json();
+      if (data.length > 8) {
+        setShowmore(true);
+      } else {
+        setShowmore(false);
+      }
       setListings(data);
       setLoading(false);
     };
@@ -78,7 +85,19 @@ export default function Search() {
       setSidebardata({ ...sidebardata, sort, order });
     }
   };
-  console.log("listings-->", listings);
+  const onShowMoreClickButton = async () => {
+    const numberOfListings = listings.length;
+    const startIndex = numberOfListings;
+    const UrlParams = new URLSearchParams(location.search);
+    UrlParams.set("startIndex", startIndex);
+    const searchQuery = UrlParams.toString();
+    const res = await fetch(`/api/listing/get?${searchQuery}`);
+    const data = await res.json();
+    if (data.length < 9) {
+      setShowmore(false);
+    }
+    setListings([...listings, ...data]);
+  };
   const handleSubmit = (e) => {
     e.preventDefault();
     const urlParams = new URLSearchParams();
@@ -213,6 +232,16 @@ export default function Search() {
             listings.map((listing) => (
               <ListingItem key={listing._id} listing={listing} />
             ))}
+
+          {showmore && (
+            <button
+              onClick={onShowMoreClickButton}
+              className="text-green-700 text
+              text-center w-full hover:underline p-7"
+            >
+              Show More
+            </button>
+          )}
         </div>
       </div>
     </div>
